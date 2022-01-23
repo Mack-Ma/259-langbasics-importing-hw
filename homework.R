@@ -1,3 +1,7 @@
+## Change this accordingly 
+wd <- '/Users/tianyema/Documents/GitHub/259-langbasics-importing-hw'
+###########################
+  
 #PSYC 259 Homework 1 - Data Import
 #For full credit, provide answers for at least 6/8 questions
 
@@ -13,12 +17,12 @@
 #Speed response was what the participant report
 #Correct is whether their response matched the actual speed
 
-### QUESTION 1 ------ 
+### QUESTION 1 -s----- 
 
 # Load the readr package
 
 # ANSWER
-
+library(readr)
 
 ### QUESTION 2 ----- 
 
@@ -45,7 +49,9 @@
 col_names  <-  c("trial_num","speed_actual","speed_response","correct")
 
 # ANSWER
-
+f_name <- 'data_A/6191_1.txt'
+coltypes <- 'dccl'
+ds1 <- read_delim(file = f_name, col_names = col_names, col_types = coltypes, skip = 7) 
 
 
 ### QUESTION 3 ----- 
@@ -55,7 +61,10 @@ col_names  <-  c("trial_num","speed_actual","speed_response","correct")
 # Then write the new data to a CSV file in the "data_cleaned" folder
 
 # ANSWER
-
+ds1$trial_num_r1 <- ds1$trial_num + 100
+setwd(wd)
+dir.create('data_cleaned', showWarnings = 0)
+write_csv(ds1, file = 'data_cleaned/6191_1_r1.csv')
 
 ### QUESTION 4 ----- 
 
@@ -63,14 +72,15 @@ col_names  <-  c("trial_num","speed_actual","speed_response","correct")
 # Store it to a variable
 
 # ANSWER
-
+list_haha <- list.files(path = 'data_A', full.names = T)
 
 ### QUESTION 5 ----- 
 
 # Read all of the files in data_A into a single tibble called ds
 
 # ANSWER
-
+setwd(wd)
+ds <- read_delim(list_haha, skip=7, col_names=col_names, col_types = coltypes)
 
 ### QUESTION 6 -----
 
@@ -83,7 +93,9 @@ col_names  <-  c("trial_num","speed_actual","speed_response","correct")
 # (It should work now, but you'll see a warning because of the erroneous data point)
 
 # ANSWER
-
+coltypes2 <- 'dccl'
+ds <- read_delim(list_haha, skip=7, col_names=col_names, col_types = coltypes2)
+ds$trial_num_r1 <- ds$trial_num + 100
 
 ### QUESTION 7 -----
 
@@ -93,7 +105,9 @@ col_names  <-  c("trial_num","speed_actual","speed_response","correct")
 # Re-import the data so that filename becomes a column
 
 # ANSWER
-
+ds_r1 <- read_delim(list_haha, skip=7, col_names=col_names, col_types = coltypes2,
+                    id = 'subj_block')
+ds_r1$subj_block <- substring(ds_r1$subj_block,8,13)
 
 ### QUESTION 8 -----
 
@@ -102,4 +116,7 @@ col_names  <-  c("trial_num","speed_actual","speed_response","correct")
 # There are two sheets of data -- import each one into a new tibble
 
 # ANSWER
-
+install.packages('readxl')
+library(readxl)
+ds_xl1<-read_excel('data_B/participant_info.xlsx', sheet=1)
+ds_xl2<-read_excel('data_B/participant_info.xlsx', sheet=2, skip=0, col_names=c('subj_block', 'testdate'))
